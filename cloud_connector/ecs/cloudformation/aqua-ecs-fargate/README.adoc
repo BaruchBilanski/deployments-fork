@@ -15,6 +15,8 @@ For high availability, you must deploy Aqua on 2 availability Zones (AZs).
 
 Your deployment creates the Aqua Cloud Connector service, on the Fargate ECS instance. A CloudFormation template is used to deploy Aqua Cloud Connector. This can be done either with the AWS CloudFormation Management Console or the AWS Command Line interface (CLI), as explained below.
 
+*Notice:* There are 2 deployment manifests, User and Password authentication based manifest for *On-Prem environments* (CloudConnectorFargate.yaml) and a Token Authentication based manifest which can be used for both *On-Prem and SaaS environments* (CloudConnectorTokenFargate.yaml).
+
 == Prerequisites
 
 - One or more ECS clusters
