@@ -16,8 +16,8 @@ Metadata:
         Parameters:
           - AquaGatewayUrl
           - AquaCCImage
-          - AquaConsoleUsername
-          - AquaConsolePassword
+          - AquaCloudConnectorToken
+
     ParameterLabels:
       VpcId:
         default: VPC ID
@@ -29,10 +29,8 @@ Metadata:
         default: Aqua gateway url
       ClusterName:
         default: Name of ecs cluster
-      AquaConsoleUsername:
-        default: Aqua Console Username
-      AquaConsolePassword:
-        default: Aqua Console Password        
+      AquaCloudConnectorToken:
+        default: Aqua Cloud Connector Authentication Token
 Parameters:
   AquaCCImage:
     Type: String
@@ -55,13 +53,10 @@ Parameters:
   AquaGatewayUrl:
     Type: String
     Description: Enter Aqua Gateway Url
-  AquaConsoleUsername:
+  AquaCloudConnectorToken:
     Type: String
-    Description: Enter Aqua Console Username    
-  AquaConsolePassword:
-    Type: String
-    Description: Enter Aqua Console Password 
-    NoEcho: true          
+    Description: Enter Aqua Cloud Connector Authentication Token
+    NoEcho: true
 Resources:
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -151,16 +146,14 @@ Resources:
               awslogs-region: !Ref "AWS::Region"
               awslogs-stream-prefix: aquaCloudConnector
           Secrets:
-            - Name: AQUA_CLOUD_CONNECTOR_USERNAME
-              ValueFrom: !Ref SecretU
-            - Name: AQUA_CLOUD_CONNECTOR_PASSWORD
-              ValueFrom: !Ref SecretP              
+            - Name: AQUA_CLOUD_CONNECTOR_TOKEN
+              ValueFrom: !Ref SecretToken
           Environment:
             - Name: AQUA_SERVER
               Value: !Join [':', [!Ref AquaGatewayUrl, "443"]]
             - Name: AQUA_CLOUD_CONNECTOR_CONFIG_FILE_PATH
               Value: /etc/config/connector.yaml                
-            - Name: AQUA_CLOUD_CONNECTOR_HEALTH_PORTCloudConnectorFargate.yaml
+            - Name: AQUA_CLOUD_CONNECTOR_HEALTH_PORT
               Value: ""
             - Name: AQUA_TLS_VERIFY
               Value: 1
@@ -290,22 +283,14 @@ Resources:
     Properties:
       LogGroupName: !Join ['-', ['/aqua/cc', !Join ["-", ["td", !GetAtt RandomString.RandomString]]]]
       RetentionInDays: 30
-  SecretP:
+  SecretToken:
     Type: AWS::SecretsManager::Secret
     Properties:
-      Description: Aqua Console password
-      Name: !Join ["/", ["AquaConsolePassword", !GetAtt RandomString.RandomString]]
-      SecretString: 
-        Fn::Base64:
-          !Ref AquaConsolePassword      
-  SecretU:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Description: Aqua Console Username
-      Name: !Join ["/", ["AquaConsoleUsername", !GetAtt RandomString.RandomString]]
+      Description: Aqua Cloud Connector Authentication Token
+      Name: !Join ["/", ["AquaCloudConnectorToken", !GetAtt RandomString.RandomString]]
       SecretString:
         Fn::Base64:
-          !Ref AquaConsoleUsername                    
+          !Ref AquaCloudConnectorToken
 Outputs:
   AquaGatewayUrl:
     Description: >-
