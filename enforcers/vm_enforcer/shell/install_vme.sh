@@ -192,8 +192,13 @@ get_templates_local() {
 }
 
 get_app_online() {
+  if [ -z "${CUSTOM_TAR_PATH}" ];
+  then
+  	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
+  else
+  	ENFORCER_RUNC_TAR_FILE_URL="${CUSTOM_TAR_PATH}/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
+  fi
 
-  ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
   if [ "${DEV_INSTALL}" == "true" ]; then
   	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"	
   fi
@@ -471,6 +476,12 @@ bootstrap_args_sh() {
     --memory-limit)
       is_flag_value_valid "--memory-limit" "$2"
       AQUA_MEMORY_LIMIT="$2"
+      shift
+      shift
+      ;;
+    --tar-path)
+      is_flag_value_valid "--tar-path" "$2"
+      CUSTOM_TAR_PATH="$2"
       shift
       shift
       ;;
