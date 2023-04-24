@@ -197,7 +197,6 @@ get_app_online() {
   	ENFORCER_RUNC_TAR_FILE_URL="${CUSTOM_TAR_PATH}/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
   else
   	ENFORCER_RUNC_TAR_FILE_URL="https://download.aquasec.com/internal/host-enforcer/${ENFORCER_VERSION}/${ENFORCER_RUNC_TAR_FILE_NAME}"
-
   fi
 
   if [ "${DEV_INSTALL}" == "true" ]; then
